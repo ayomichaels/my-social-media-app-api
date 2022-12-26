@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
+const {authorizeUser} = require('../middleware/auth')
 
 const {
     createUser,
@@ -11,7 +11,7 @@ const {
 } = require('../controllers/user')
 
 router.route('/create').post(createUser)
-router.route('/all').get(getAllUsers)
+router.route('/all').get(authorizeUser, getAllUsers)
 router.route('/:id').get(getUser).delete(deleteUser).patch(updateUser)
 
 module.exports = router

@@ -7,7 +7,7 @@ const postModel = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    topic: {
+    title: {
         type: String,
         required: true
     },

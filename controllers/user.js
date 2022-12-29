@@ -1,4 +1,8 @@
 const User = require('../models/user')
+const Post = require('../models/post')
+const passport = require('passport')
+
+
 
 const createUser = async (req,res)=>{
     const newUser = await User.create(req.body)
@@ -30,14 +34,35 @@ const updateUser = async (req,res)=>{
         new: true,
         runValidators: true
     })
-    res.status(400).json(user)
+    user.updatedAt = Date.now
+    await user.save()
+    
+    res.status(200).json(user)
 }
 
 
 const deleteUser = async (req,res)=>{
     const {id:userID} = req.params
-    const user = User.findOneAndDelete({_id:userID})
+    const user = await User.findByIdAndDelete({_id:userID})
+    console.log(user);
+    if (user) {
+        console.log('deleted');
+    }
     res.status(200).send('User deleted successfully')
+}
+
+//ADMIN PRIVILEGES
+const changeRole = async (req,res)=>{
+    const {user} = req.body
+    const foundUser = await User.findById({_id:user})
+    if (!foundUser) {
+        return res.status(400).send('USER NOT FOUND, TYPE IN THE CORRECT USERD ID')
+    }
+    foundUser.role = 'admin'
+    foundUser.updatedAt = Date.now()
+    await foundUser.save()
+
+    res.status(200).json(foundUser)
 }
 
 module.exports = {
@@ -45,5 +70,7 @@ module.exports = {
     getUser,
     getAllUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    changeRole
+    
 }

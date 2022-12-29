@@ -39,6 +39,8 @@ const updatePost = async (req,res)=>{
         new: true,
         runValidators: true
     } )
+    post.updatedAt = Date.now()
+    await post.save()
     if (!post) {return res.status(400).send('invalid ID, post not found')}
     console.log('update made successfully');
 

@@ -4,9 +4,10 @@
 
 const User = require('../models/user')
 
-const authorizeUser = (req,res,next)=>{
+const authorizeUser = async (req,res,next)=>{
     const {username, password, email} = req.body
-    const user = User.find({email:email})
+    const user = await User.findOne({email:email})
+    console.log(user.role);
     if (!user) {
             return res.status(401).send('ACCESS DENIED USER NOT REGISTERED')
         }
